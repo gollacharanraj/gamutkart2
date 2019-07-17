@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+		checkout scm
+	    }
+	}
+	stage('Build') {
+	    steps {
+		sh '/home/charangolla/Destros/apache-maven-3.6.1/bin/mvn install'
+	}
+	    }
+	stage('Deployment') {
+	    steps {
+		sh 'sshpass -p "charan" scp /root/.jenkins/workspace/gamutkartnew/target/gamutkart.war charan@172.17.0.3:/home/charan/Destros/apache-tomcat-8.5.41/webapps'
+		sh 'sshpass -p "charan" ssh charan@172.17.0.3 "JAVA_HOME=/home/charan/Destros/jdk1.8.0_211" "/home/charan/Destros/apache-tomcat-8.5.41/bin/startup.sh"'
+	    }
+	}
+
+    }
+} 
